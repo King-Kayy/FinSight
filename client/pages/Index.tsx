@@ -58,12 +58,12 @@ export default function Index() {
               <TabsTrigger value="register">Register</TabsTrigger>
             </TabsList>
 
-            {/* ── Login Tab ── */}
+            {/*  Login Tab  */}
             <TabsContent value="login">
               <LoginForm onSuccess={() => navigate('/dashboard')} login={login} />
             </TabsContent>
 
-            {/* ── Register Tab ── */}
+            {/*  Register Tab  */}
             <TabsContent value="register">
               <RegisterForm onSuccess={() => navigate('/dashboard')} register={register} />
             </TabsContent>
@@ -78,9 +78,9 @@ export default function Index() {
   );
 }
 
-// ---------------------------------------------------------------------------
+
 // Login form
-// ---------------------------------------------------------------------------
+
 
 interface LoginFormProps {
   login: (email: string, password: string) => Promise<void>;
@@ -161,9 +161,9 @@ function LoginForm({ login, onSuccess }: LoginFormProps) {
   );
 }
 
-// ---------------------------------------------------------------------------
+
 // Register form
-// ---------------------------------------------------------------------------
+
 
 interface RegisterFormProps {
   register: (email: string, name: string, password: string) => Promise<void>;
