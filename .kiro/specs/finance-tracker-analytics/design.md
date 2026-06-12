@@ -2,7 +2,7 @@
 
 ## Overview
 
-Finance Tracker Analytics is a full-stack single-page application that lets users record income and expenses, manage budgets with alert thresholds, visualise spending patterns through charts, track savings goals, automate recurring transactions, scan receipts via OCR, and export reports to PDF or Excel. All monetary values are denominated in **GHS (Ghana Cedis)**.
+FinSight is a full-stack single-page application that lets users record income and expenses, manage budgets with alert thresholds, visualise spending patterns through charts, track savings goals, automate recurring transactions, scan receipts via OCR, and export reports to PDF or Excel. All monetary values are denominated in **GHS (Ghana Cedis)**.
 
 The application is built on the **Fusion Starter** template:
 
