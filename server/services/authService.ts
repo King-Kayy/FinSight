@@ -1,0 +1,82 @@
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { db } from '../db/index';
+import { ValidationError, AuthError, ConflictError } from '../middleware/errors';
+import type { UserProfile, AuthResponse } from '../../shared/api';
+
+const SALT_ROUNDS = 12;
+const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret';
+
+/**
+ * Register a new user.
+ * Throws ValidationError for missing/invalid fields, ConflictError on duplicate email.
+ */
+export async function register(
+  email: string,
+  name: string,
+  password: string,
+): Promise<UserProfile> {
+  // Validate required fields
+  if (!email) {
+    throw new ValidationError('Email is required', 'email');
+  }
+  if (!name) {
+    throw new ValidationError('Name is required', 'name');
+  }
+  if (!password || password.length < 8) {
+    throw new ValidationError('Password must be at least 8 characters', 'password');
+  }
+
+  const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+
+  try {
+    const result = await db.query(
+      'INSERT INTO users (email, name, password) VALUES ($1, $2, $3) RETURNING id, email, name',
+      [email, name, passwordHash],
+    );
+    const row = result.rows[0];
+    return { id: row.id, email: row.email, name: row.name };
+  } catch (err: any) {
+    // PostgreSQL unique violation code
+    if (err?.code === '23505' || (err?.message as string | undefined)?.includes('unique')) {
+      throw new ConflictError('Email already registered');
+    }
+    // In-memory fallback may use a different error shape — check message text
+    if ((err?.message as string | undefined)?.toLowerCase().includes('duplicate')) {
+      throw new ConflictError('Email already registered');
+    }
+    throw err;
+  }
+}
+
+/**
+ * Authenticate a user and return a signed JWT.
+ * Throws AuthError on unknown email or wrong password.
+ */
+export async function login(email: string, password: string): Promise<AuthResponse> {
+  const result = await db.query(
+    'SELECT id, email, name, password FROM users WHERE email = $1',
+    [email],
+  );
+
+  if (result.rows.length === 0) {
+    throw new AuthError('Invalid credentials');
+  }
+
+  const user = result.rows[0];
+  const passwordMatch = await bcrypt.compare(password, user.password);
+
+  if (!passwordMatch) {
+    throw new AuthError('Invalid credentials');
+  }
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    JWT_SECRET,
+    { expiresIn: '24h' },
+  );
+
+  const userProfile: UserProfile = { id: user.id, email: user.email, name: user.name };
+
+  return { token, user: userProfile };
+}
