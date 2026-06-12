@@ -1,4 +1,4 @@
-# Design Document — Finance Tracker Analytics
+# Design Document — FinSight
 
 ## Overview
 
