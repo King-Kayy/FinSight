@@ -32,7 +32,8 @@ export default function SavingsGoals() {
             <div key={goal.id} className="relative group">
               <SavingsGoalCard goal={goal} />
               <button
-                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md bg-white border border-gray-200 shadow-sm hover:bg-gray-50"
+                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md
+                 bg-white border border-gray-200 shadow-sm hover:bg-gray-50"
                 onClick={() => { setEditing(goal); setFormOpen(true); }}
                 title="Edit goal"
               >

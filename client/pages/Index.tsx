@@ -198,7 +198,7 @@ function RegisterForm({ register, onSuccess }: RegisterFormProps) {
         <Input
           id="register-name"
           type="text"
-          placeholder="Kwame Mensah"
+          placeholder="Kweku Mensah"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
