@@ -64,7 +64,7 @@ export function BudgetForm({ onClose, existing }: BudgetFormProps) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
-              disabled={isSubmitting || !!existing}
+              disabled={isSubmitting}
             />
           </div>
           {!existing && (

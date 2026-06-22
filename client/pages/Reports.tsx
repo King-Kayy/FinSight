@@ -44,13 +44,13 @@ export default function Reports() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
 
         <div className="flex items-center gap-2 flex-wrap">
           {/* Month selector */}
           <select
-            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="flex-1 sm:flex-none border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
           >
@@ -61,17 +61,17 @@ export default function Reports() {
 
           {/* Year selector */}
           <select
-            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="flex-1 sm:flex-none border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
           >
             {years.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
 
-          <Button variant="outline" size="sm" onClick={() => handleExport("pdf")}>
+          <Button variant="outline" size="sm" className="flex-1 sm:flex-none" onClick={() => handleExport("pdf")}>
             <Download className="w-4 h-4 mr-1" /> PDF
           </Button>
-          <Button variant="outline" size="sm" onClick={() => handleExport("excel")}>
+          <Button variant="outline" size="sm" className="flex-1 sm:flex-none" onClick={() => handleExport("excel")}>
             <Download className="w-4 h-4 mr-1" /> Excel
           </Button>
         </div>
@@ -119,11 +119,11 @@ export default function Reports() {
 
           {/* Category breakdown table */}
           {report.expense_by_category.length > 0 && (
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
               <div className="px-5 py-4 border-b border-gray-100">
                 <h2 className="text-base font-semibold text-gray-700">Expenses by Category</h2>
               </div>
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[320px]">
                 <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                   <tr>
                     <th className="px-4 py-3 text-left">Category</th>

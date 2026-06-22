@@ -8,14 +8,14 @@ const SALT_ROUNDS = 12;
 const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret';
 
 /**
- * Register a new user.
+ * Register a new user and return a signed JWT (same shape as login).
  * Throws ValidationError for missing/invalid fields, ConflictError on duplicate email.
  */
 export async function register(
   email: string,
   name: string,
   password: string,
-): Promise<UserProfile> {
+): Promise<AuthResponse> {
   // Validate required fields
   if (!email) {
     throw new ValidationError('Email is required', 'email');
@@ -35,7 +35,17 @@ export async function register(
       [email, name, passwordHash],
     );
     const row = result.rows[0];
-    return { id: row.id, email: row.email, name: row.name };
+    console.log('[auth] Registered user:', row.id, row.email, '| hash prefix:', passwordHash.slice(0, 7));
+
+    // Issue a JWT immediately — no need for a second login round-trip
+    const token = jwt.sign(
+      { id: row.id, email: row.email },
+      JWT_SECRET,
+      { expiresIn: '24h' },
+    );
+
+    const userProfile: UserProfile = { id: row.id, email: row.email, name: row.name };
+    return { token, user: userProfile };
   } catch (err: any) {
     // PostgreSQL unique violation code
     if (err?.code === '23505' || (err?.message as string | undefined)?.includes('unique')) {
@@ -67,6 +77,10 @@ export async function login(email: string, password: string): Promise<AuthRespon
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
+    // Log server-side to help diagnose hash mismatches during development
+    console.error('[auth] bcrypt.compare failed for', email,
+      '| hash length:', user.password?.length,
+      '| hash prefix:', user.password?.slice(0, 7));
     throw new AuthError('Invalid credentials');
   }
 

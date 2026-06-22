@@ -45,8 +45,8 @@ export default function Budgets() {
       ) : budgets.length === 0 ? (
         <p className="text-gray-400 text-center py-10">No budgets set. Create one to get started.</p>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+          <table className="w-full text-sm min-w-[520px]">
             <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
               <tr>
                 <th className="px-4 py-3 text-left">Period</th>

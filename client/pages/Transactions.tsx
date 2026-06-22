@@ -121,8 +121,8 @@ export default function Transactions() {
           ) : income.length === 0 ? (
             <p className="text-center text-gray-400 py-10">No income records yet.</p>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+              <table className="w-full text-sm min-w-[560px]">
                 <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                   <tr>
                     <th className="px-4 py-3 text-left">Date</th>
@@ -139,19 +139,21 @@ export default function Transactions() {
                       <td className="px-4 py-3">{rec.category}</td>
                       <td className="px-4 py-3 text-gray-500">{rec.description ?? "—"}</td>
                       <td className="px-4 py-3 text-right font-medium text-emerald-600">{formatGHS(parseFloat(rec.amount))}</td>
-                      <td className="px-4 py-3 text-right space-x-1">
-                        <Button size="sm" variant="ghost" onClick={() => { setEditingIncome(rec); setIncomeFormOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => {
-                            if (confirm("Delete this income record?"))
-                              deleteIncome.mutate(rec.id, { onSuccess: () => { toast.success("Deleted"); refresh(); } });
-                          }}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button size="sm" variant="ghost" className="h-9 w-9 p-0" onClick={() => { setEditingIncome(rec); setIncomeFormOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-9 w-9 p-0 text-red-500 hover:text-red-700"
+                            onClick={() => {
+                              if (confirm("Delete this income record?"))
+                                deleteIncome.mutate(rec.id, { onSuccess: () => { toast.success("Deleted"); refresh(); } });
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -176,8 +178,8 @@ export default function Transactions() {
           ) : expenses.length === 0 ? (
             <p className="text-center text-gray-400 py-10">No expense records yet.</p>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+              <table className="w-full text-sm min-w-[560px]">
                 <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                   <tr>
                     <th className="px-4 py-3 text-left">Date</th>
@@ -194,19 +196,21 @@ export default function Transactions() {
                       <td className="px-4 py-3">{rec.category}</td>
                       <td className="px-4 py-3 text-gray-500">{rec.description ?? "—"}</td>
                       <td className="px-4 py-3 text-right font-medium text-red-600">{formatGHS(parseFloat(rec.amount))}</td>
-                      <td className="px-4 py-3 text-right space-x-1">
-                        <Button size="sm" variant="ghost" onClick={() => { setEditingExpense(rec); setExpenseFormOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => {
-                            if (confirm("Delete this expense?"))
-                              deleteExpense.mutate(rec.id, { onSuccess: () => { toast.success("Deleted"); refresh(); } });
-                          }}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button size="sm" variant="ghost" className="h-9 w-9 p-0" onClick={() => { setEditingExpense(rec); setExpenseFormOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-9 w-9 p-0 text-red-500 hover:text-red-700"
+                            onClick={() => {
+                              if (confirm("Delete this expense?"))
+                                deleteExpense.mutate(rec.id, { onSuccess: () => { toast.success("Deleted"); refresh(); } });
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -226,8 +230,8 @@ export default function Transactions() {
           {recurring.length === 0 ? (
             <p className="text-center text-gray-400 py-10">No recurring expenses set up.</p>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+              <table className="w-full text-sm min-w-[580px]">
                 <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                   <tr>
                     <th className="px-4 py-3 text-left">Description</th>
@@ -247,7 +251,7 @@ export default function Transactions() {
                       <td className="px-4 py-3 text-gray-500">{new Date(rec.next_run_at).toLocaleDateString()}</td>
                       <td className="px-4 py-3 text-right font-medium">{formatGHS(parseFloat(rec.amount))}</td>
                       <td className="px-4 py-3 text-right">
-                        <Button size="sm" variant="ghost" className="text-orange-500 hover:text-orange-700" onClick={() => { if (confirm("Deactivate this recurring expense?")) deactivate.mutate(rec.id, { onSuccess: () => toast.success("Deactivated") }); }}>
+                        <Button size="sm" variant="ghost" className="h-9 w-9 p-0 text-orange-500 hover:text-orange-700" onClick={() => { if (confirm("Deactivate this recurring expense?")) deactivate.mutate(rec.id, { onSuccess: () => toast.success("Deactivated") }); }}>
                           <RefreshCw className="w-4 h-4" />
                         </Button>
                       </td>

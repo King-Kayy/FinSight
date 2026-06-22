@@ -1,14 +1,19 @@
 [build]
-command = "npm run build:client"
+command = "pnpm run build:client"
 functions = "netlify/functions"
 publish = "dist/spa"
 
-
 [functions]
-external_node_modules = ["express"]
+external_node_modules = ["express", "pg", "bcryptjs", "tesseract.js", "pdfkit", "exceljs"]
 node_bundler = "esbuild"
+
 [[redirects]]
-force = true
 from = "/api/*"
-status = 200
 to = "/.netlify/functions/api/:splat"
+status = 200
+force = true
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200

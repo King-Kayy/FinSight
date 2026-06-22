@@ -274,6 +274,18 @@ function handleInsert(
     row[columns[i]] = values[i];
   }
 
+  // Enforce unique email for the users table
+  if (tableName === "users" && row.email) {
+    const duplicate = getTable("users").find(
+      (r) => r.email === row.email
+    );
+    if (duplicate) {
+      const err: any = new Error("duplicate key value violates unique constraint");
+      err.code = "23505";
+      throw err;
+    }
+  }
+
   // Auto-increment id
   row.id = nextId(tableName);
 
@@ -289,11 +301,22 @@ function handleInsert(
 
   saveToDisk();
 
-  const returnsAll = /RETURNING\s+\*/i.test(sql);
-  return {
-    rows: returnsAll ? [row] : [],
-    rowCount: 1,
-  };
+  const returningMatch = sql.match(/RETURNING\s+(.+)$/i);
+  if (!returningMatch) {
+    return { rows: [], rowCount: 1 };
+  }
+
+  if (/RETURNING\s+\*/i.test(sql)) {
+    return { rows: [row], rowCount: 1 };
+  }
+
+  // RETURNING col1, col2, ... — project only the requested columns
+  const cols = returningMatch[1].split(',').map((c) => c.trim());
+  const projected: Row = {};
+  for (const col of cols) {
+    projected[col] = row[col];
+  }
+  return { rows: [projected], rowCount: 1 };
 }
 
 function handleSelect(
@@ -375,11 +398,23 @@ function handleUpdate(
 
   saveToDisk();
 
-  const returnsAll = /RETURNING\s+\*/i.test(sql);
-  return {
-    rows: returnsAll ? updatedRows : [],
-    rowCount: updatedRows.length,
-  };
+  const returningMatch = sql.match(/RETURNING\s+(.+)$/i);
+  if (!returningMatch) {
+    return { rows: [], rowCount: updatedRows.length };
+  }
+
+  if (/RETURNING\s+\*/i.test(sql)) {
+    return { rows: updatedRows, rowCount: updatedRows.length };
+  }
+
+  // RETURNING col1, col2, ... — project only the requested columns
+  const cols = returningMatch[1].split(',').map((c) => c.trim());
+  const projected = updatedRows.map((r) => {
+    const p: Row = {};
+    for (const col of cols) p[col] = r[col];
+    return p;
+  });
+  return { rows: projected, rowCount: updatedRows.length };
 }
 
 function handleDelete(

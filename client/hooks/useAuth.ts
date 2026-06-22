@@ -59,8 +59,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const err = await res.json().catch(() => ({ error: 'Registration failed' }));
       throw new Error(err.error ?? 'Registration failed');
     }
-    // Auto-login after successful registration
-    await login(email, password);
+    // Register now returns a token directly — no second login round-trip needed
+    const data: AuthResponse = await res.json();
+    saveAuth(data.token, data.user);
   };
 
   const logout = (): void => {

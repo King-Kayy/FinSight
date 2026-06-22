@@ -1,10 +1,13 @@
 import serverless from "serverless-http";
-
 import { createServer } from "../../server";
 
-// createServer() is async (initialises the DB); wrap in a lazy handler so
-// serverless-http picks up the fully-initialised Express app.
+// Cache the handler across warm invocations
+let cachedHandler: ReturnType<typeof serverless> | null = null;
+
 export const handler = async (event: any, context: any) => {
-  const app = await createServer();
-  return serverless(app)(event, context);
+  if (!cachedHandler) {
+    const app = await createServer();
+    cachedHandler = serverless(app);
+  }
+  return cachedHandler(event, context);
 };
