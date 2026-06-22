@@ -7,8 +7,6 @@ import type { Express } from "express";
 // Load .env before anything else
 dotenvConfig({ path: path.resolve(__dirname, ".env") });
 
-import { createServer } from "./server";
-
 export default defineConfig(() => ({
   server: {
     host: "::",
@@ -31,30 +29,27 @@ export default defineConfig(() => ({
 }));
 
 function expressPlugin(): Plugin {
-  let expressApp: Express | null = null;
-  let initError: Error | null = null;
-
-  // Start building Express immediately — before Vite even starts
-  const ready = createServer()
-    .then((app) => {
-      expressApp = app;
-      console.log("[express-plugin] Express ready");
-    })
-    .catch((err) => {
-      initError = err;
-      console.error("[express-plugin] FATAL:", err);
-    });
-
   return {
     name: "express-plugin",
     apply: "serve",
     enforce: "pre",
     async configureServer(server) {
-      // Wait for Express to be ready before Vite finishes setting up
-      await ready;
+      // Dynamically import createServer only during dev — never during build
+      const { createServer } = await import("./server");
 
-      // Use server.middlewares.use directly (not via return fn)
-      // This runs BEFORE Vite's internal transform middleware
+      let expressApp: Express | null = null;
+      let initError: Error | null = null;
+
+      await createServer()
+        .then((app) => {
+          expressApp = app;
+          console.log("[express-plugin] Express ready");
+        })
+        .catch((err) => {
+          initError = err;
+          console.error("[express-plugin] FATAL:", err);
+        });
+
       server.middlewares.use((req, res, next) => {
         if (!req.url?.startsWith("/api")) {
           return next();
@@ -74,7 +69,6 @@ function expressPlugin(): Plugin {
           return;
         }
 
-        // Hand off to Express synchronously
         expressApp(req as any, res as any, next);
       });
     },
