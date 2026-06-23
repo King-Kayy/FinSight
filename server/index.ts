@@ -75,19 +75,16 @@ export async function createServer() {
   // Global error handler — must be registered AFTER all routes
   // ---------------------------------------------------------------------------
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    const r = res as any;
     if (err instanceof ValidationError) {
-      return res
-        .status(422)
-        .json({ error: err.message, field: (err as ValidationError).field });
+      return r.status(422).json({ error: err.message, field: (err as ValidationError).field });
     }
-    if (err instanceof AuthError) return res.status(401).json({ error: err.message });
-    if (err instanceof ForbiddenError) return res.status(403).json({ error: err.message });
-    if (err instanceof NotFoundError) return res.status(404).json({ error: err.message });
-    if (err instanceof ConflictError) return res.status(409).json({ error: err.message });
-    // Log full error details server-side and return the actual message to the client
-    // so registration/login failures are visible during development
+    if (err instanceof AuthError) return r.status(401).json({ error: err.message });
+    if (err instanceof ForbiddenError) return r.status(403).json({ error: err.message });
+    if (err instanceof NotFoundError) return r.status(404).json({ error: err.message });
+    if (err instanceof ConflictError) return r.status(409).json({ error: err.message });
     console.error("[Server Error]", err);
-    return res.status(500).json({ error: err.message ?? "Internal server error" });
+    return r.status(500).json({ error: err.message ?? "Internal server error" });
   });
 
   return app;

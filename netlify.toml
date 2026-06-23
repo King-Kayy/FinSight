@@ -1,5 +1,5 @@
 [build]
-command = "corepack enable && pnpm run build:client"
+command = "corepack enable && pnpm install --no-frozen-lockfile && pnpm run build:client"
 functions = "netlify/functions"
 publish = "dist/spa"
 
