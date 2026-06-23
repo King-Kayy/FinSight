@@ -8,8 +8,7 @@ NODE_VERSION = "20"
 PNPM_VERSION = "10.14.0"
 
 [functions]
-node_bundler = "esbuild"
-external_node_modules = ["pg", "pg-native", "pg-cloudflare", "pdfkit", "canvas"]
+node_bundler = "nft"
 
 [[redirects]]
 from = "/api/*"
