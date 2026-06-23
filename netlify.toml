@@ -5,6 +5,7 @@ publish = "dist/spa"
 
 [functions]
 node_bundler = "esbuild"
+external_node_modules = ["pg", "pg-native", "bcryptjs", "pdfkit", "exceljs", "node-cron", "dotenv"]
 
 [[redirects]]
 from = "/api/*"
