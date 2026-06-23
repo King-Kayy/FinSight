@@ -1,16 +1,14 @@
 [build]
-command = "corepack enable && pnpm install --no-frozen-lockfile && pnpm run build:client"
+command = "corepack enable && pnpm install --no-frozen-lockfile && pnpm run build:client && pnpm run build:function"
 functions = "netlify/functions"
 publish = "dist/spa"
 
 [build.environment]
 NODE_VERSION = "20"
 PNPM_VERSION = "10.14.0"
-CI = "false"
 
 [functions]
 node_bundler = "esbuild"
-external_node_modules = ["express", "pg", "pg-pool", "pg-protocol", "pg-types", "bcryptjs", "jsonwebtoken", "dotenv", "cors", "multer", "node-cron", "pdfkit", "exceljs", "serverless-http", "busboy", "mime", "mime-types"]
 
 [[redirects]]
 from = "/api/*"
