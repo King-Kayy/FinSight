@@ -9,7 +9,6 @@ PNPM_VERSION = "10.14.0"
 
 [functions]
 node_bundler = "esbuild"
-esbuild_target = "node20"
 
 [[redirects]]
 from = "/api/*"
