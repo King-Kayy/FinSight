@@ -13,7 +13,6 @@
  * requests so the schema is ready before the first query.
  */
 
-import "dotenv/config";
 import pkg from "pg";
 const { Pool } = pkg;
 import { migrate } from "./schema";
