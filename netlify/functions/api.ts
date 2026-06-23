@@ -7,7 +7,13 @@ let cachedHandler: ReturnType<typeof serverless> | null = null;
 export const handler = async (event: any, context: any) => {
   if (!cachedHandler) {
     const app = await createServer();
-    cachedHandler = serverless(app);
+    cachedHandler = serverless(app, {
+      binary: false,
+      request(req: any, event: any) {
+        // Log path for debugging
+        console.log("[api] path:", event.path, "body:", typeof event.body);
+      },
+    });
   }
   return cachedHandler(event, context);
 };
