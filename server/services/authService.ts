@@ -60,6 +60,34 @@ export async function register(
 }
 
 /**
+ * Reset a user's password directly (no email required).
+ * Throws ValidationError for missing/invalid fields, AuthError if email not found.
+ */
+export async function resetPassword(
+  email: string,
+  newPassword: string,
+): Promise<void> {
+  if (!email) throw new ValidationError('Email is required', 'email');
+  if (!newPassword || newPassword.length < 8) {
+    throw new ValidationError('Password must be at least 8 characters', 'password');
+  }
+
+  const result = await db.query(
+    'SELECT id FROM users WHERE email = $1',
+    [email],
+  );
+  if (result.rows.length === 0) {
+    throw new AuthError('No account found with that email');
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
+  await db.query(
+    'UPDATE users SET password = $1 WHERE email = $2',
+    [passwordHash, email],
+  );
+}
+
+/**
  * Authenticate a user and return a signed JWT.
  * Throws AuthError on unknown email or wrong password.
  */

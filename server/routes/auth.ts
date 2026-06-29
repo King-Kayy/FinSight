@@ -23,4 +23,14 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+router.post('/reset-password', async (req, res, next) => {
+  try {
+    const { email, newPassword } = req.body;
+    await authService.resetPassword(email, newPassword);
+    res.json({ message: 'Password updated successfully' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
