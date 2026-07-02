@@ -12,7 +12,7 @@ export function deriveStatus(progress: number): "active" | "achieved" {
 }
 
 async function getCurrentSavings(userId: number): Promise<number> {
-  // Fetch all rows and sum in JS — works with both PostgreSQL and the in-memory fallback
+  // Sum income minus expenses — represents total net savings available
   const incomeRes = await db.query(
     "SELECT * FROM income WHERE user_id = $1",
     [userId]
@@ -23,7 +23,7 @@ async function getCurrentSavings(userId: number): Promise<number> {
   );
   const totalIncome = incomeRes.rows.reduce((sum: number, r: any) => sum + parseFloat(r.amount), 0);
   const totalExpenses = expenseRes.rows.reduce((sum: number, r: any) => sum + parseFloat(r.amount), 0);
-  return totalIncome - totalExpenses;
+  return Math.max(0, totalIncome - totalExpenses);
 }
 
 export async function listSavingsGoals(userId: number): Promise<SavingsGoal[]> {
@@ -74,6 +74,13 @@ export async function createSavingsGoal(
     current_savings: "0.00",
     progress_percentage: 0,
   } as SavingsGoal;
+}
+
+export async function deleteSavingsGoal(userId: number, id: number): Promise<void> {
+  const existing = await db.query("SELECT * FROM savings_goals WHERE id = $1", [id]);
+  if (existing.rows.length === 0) throw new NotFoundError("Savings goal not found");
+  if (existing.rows[0].user_id !== userId) throw new ForbiddenError("Forbidden");
+  await db.query("DELETE FROM savings_goals WHERE id = $1", [id]);
 }
 
 export async function updateSavingsGoal(

@@ -37,3 +37,14 @@ export function useUpdateSavingsGoal() {
     },
   });
 }
+
+export function useDeleteSavingsGoal() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => api.delete(`/api/savings-goals/${id}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["savings-goals"] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+  });
+}

@@ -36,4 +36,13 @@ router.put("/savings-goals/:id", async (req, res, next) => {
   }
 });
 
+router.delete("/savings-goals/:id", async (req, res, next) => {
+  try {
+    await savingsService.deleteSavingsGoal(req.user!.id, parseInt(req.params.id));
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
