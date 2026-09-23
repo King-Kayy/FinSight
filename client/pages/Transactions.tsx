@@ -18,6 +18,13 @@ import { NaturalLanguageInput } from "@/components/forms/NaturalLanguageInput";
 import type { TransactionRecord, OCRResponse } from "../../shared/api";
 import { formatGHS } from "../../shared/formatCurrency";
 
+function formatDate(dateStr: string): string {
+  // Handles both "YYYY-MM-DD" and full ISO timestamps
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+}
+
 export default function Transactions() {
   const { token } = useAuth();
 
@@ -138,7 +145,7 @@ export default function Transactions() {
                 <tbody className="divide-y divide-gray-100">
                   {income.map((rec) => (
                     <tr key={rec.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3">{rec.date}</td>
+                      <td className="px-4 py-3">{formatDate(rec.date)}</td>
                       <td className="px-4 py-3">{rec.category}</td>
                       <td className="px-4 py-3 text-gray-500">{rec.description ?? "—"}</td>
                       <td className="px-4 py-3 text-right font-medium text-emerald-600">{formatGHS(parseFloat(rec.amount))}</td>
@@ -195,7 +202,7 @@ export default function Transactions() {
                 <tbody className="divide-y divide-gray-100">
                   {expenses.map((rec) => (
                     <tr key={rec.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3">{rec.date}</td>
+                      <td className="px-4 py-3">{formatDate(rec.date)}</td>
                       <td className="px-4 py-3">{rec.category}</td>
                       <td className="px-4 py-3 text-gray-500">{rec.description ?? "—"}</td>
                       <td className="px-4 py-3 text-right font-medium text-red-600">{formatGHS(parseFloat(rec.amount))}</td>
@@ -319,3 +326,4 @@ export default function Transactions() {
     </div>
   );
 }
+

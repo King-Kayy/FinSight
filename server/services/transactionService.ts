@@ -24,6 +24,16 @@ function validateAmountIfProvided(amount?: number): void {
   }
 }
 
+/** Normalise a DB row so the date field is always "YYYY-MM-DD" */
+function normaliseRow(row: any): TransactionRecord {
+  return {
+    ...row,
+    date: row.date instanceof Date
+      ? row.date.toISOString().split("T")[0]
+      : String(row.date).split("T")[0],
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Income operations
 // ---------------------------------------------------------------------------
@@ -33,7 +43,7 @@ export async function listIncome(userId: number): Promise<TransactionRecord[]> {
     "SELECT * FROM income WHERE user_id = $1 ORDER BY date DESC",
     [userId]
   );
-  return result.rows as TransactionRecord[];
+  return result.rows.map(normaliseRow);
 }
 
 export async function createIncome(
@@ -48,7 +58,7 @@ export async function createIncome(
      RETURNING *`,
     [userId, data.amount, data.category, data.description ?? null, data.date]
   );
-  return result.rows[0] as TransactionRecord;
+  return normaliseRow(result.rows[0]);
 }
 
 export async function updateIncome(
@@ -74,7 +84,7 @@ export async function updateIncome(
      RETURNING *`,
     [data.amount, data.category, data.description ?? null, data.date, id]
   );
-  return result.rows[0] as TransactionRecord;
+  return normaliseRow(result.rows[0]);
 }
 
 export async function deleteIncome(userId: number, id: number): Promise<void> {
@@ -98,7 +108,7 @@ export async function listExpenses(userId: number): Promise<TransactionRecord[]>
     "SELECT * FROM expenses WHERE user_id = $1 ORDER BY date DESC",
     [userId]
   );
-  return result.rows as TransactionRecord[];
+  return result.rows.map(normaliseRow);
 }
 
 export async function createExpense(
@@ -113,7 +123,7 @@ export async function createExpense(
      RETURNING *`,
     [userId, data.amount, data.category, data.description ?? null, data.date]
   );
-  return result.rows[0] as TransactionRecord;
+  return normaliseRow(result.rows[0]);
 }
 
 export async function updateExpense(
@@ -139,7 +149,7 @@ export async function updateExpense(
      RETURNING *`,
     [data.amount, data.category, data.description ?? null, data.date, id]
   );
-  return result.rows[0] as TransactionRecord;
+  return normaliseRow(result.rows[0]);
 }
 
 export async function deleteExpense(userId: number, id: number): Promise<void> {
