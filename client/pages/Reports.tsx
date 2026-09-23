@@ -69,10 +69,10 @@ export default function Reports() {
           </select>
 
           <Button variant="outline" size="sm" className="flex-1 sm:flex-none" onClick={() => handleExport("pdf")}>
-            <Download className="w-4 h-4 mr-1" /> PDF
+            <Download className="w-4 h-4 mr-1" /> Report
           </Button>
           <Button variant="outline" size="sm" className="flex-1 sm:flex-none" onClick={() => handleExport("excel")}>
-            <Download className="w-4 h-4 mr-1" /> Excel
+            <Download className="w-4 h-4 mr-1" /> CSV
           </Button>
         </div>
       </div>

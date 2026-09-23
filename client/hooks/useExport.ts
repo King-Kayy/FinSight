@@ -17,9 +17,13 @@ export function useExportPDF() {
     const res = await fetch(`/api/export/pdf?year=${year}&month=${month}`, {
       headers: { Authorization: `Bearer ${token ?? ""}` },
     });
-    if (!res.ok) throw new Error("PDF export failed");
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Export failed" }));
+      throw new Error(err.error ?? "PDF export failed");
+    }
     const blob = await res.blob();
-    downloadFile(blob, `report-${year}-${String(month).padStart(2, "0")}.pdf`);
+    // Downloads as an HTML report — open in browser and use Ctrl+P to print as PDF
+    downloadFile(blob, `report-${year}-${String(month).padStart(2, "0")}.html`);
   };
 }
 
@@ -29,8 +33,11 @@ export function useExportExcel() {
     const res = await fetch(`/api/export/excel?year=${year}&month=${month}`, {
       headers: { Authorization: `Bearer ${token ?? ""}` },
     });
-    if (!res.ok) throw new Error("Excel export failed");
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Export failed" }));
+      throw new Error(err.error ?? "Excel export failed");
+    }
     const blob = await res.blob();
-    downloadFile(blob, `report-${year}-${String(month).padStart(2, "0")}.xlsx`);
+    downloadFile(blob, `report-${year}-${String(month).padStart(2, "0")}.csv`);
   };
 }

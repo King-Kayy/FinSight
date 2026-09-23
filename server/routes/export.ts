@@ -32,11 +32,11 @@ router.get("/export/pdf", async (req, res, next) => {
     const month = req.query.month ? parseInt(req.query.month as string) : undefined;
     const report = await getMonthlyReport(req.user!.id, year, month);
     const transactions = await getTransactionsForPeriod(req.user!.id, report.year, report.month);
-    const pdf = await generatePDF(report, transactions);
-    const filename = `report-${report.year}-${String(report.month).padStart(2, "0")}.pdf`;
-    res.set("Content-Type", "application/pdf");
+    const html = await generatePDF(report, transactions);
+    const filename = `report-${report.year}-${String(report.month).padStart(2, "0")}.html`;
+    res.set("Content-Type", "text/html; charset=utf-8");
     res.set("Content-Disposition", `attachment; filename="${filename}"`);
-    res.send(pdf);
+    res.send(html);
   } catch (err) {
     next(err);
   }
@@ -48,14 +48,11 @@ router.get("/export/excel", async (req, res, next) => {
     const month = req.query.month ? parseInt(req.query.month as string) : undefined;
     const report = await getMonthlyReport(req.user!.id, year, month);
     const transactions = await getTransactionsForPeriod(req.user!.id, report.year, report.month);
-    const xlsx = await generateExcel(report, transactions);
-    const filename = `report-${report.year}-${String(report.month).padStart(2, "0")}.xlsx`;
-    res.set(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
+    const csv = await generateExcel(report, transactions);
+    const filename = `report-${report.year}-${String(report.month).padStart(2, "0")}.csv`;
+    res.set("Content-Type", "text/csv; charset=utf-8");
     res.set("Content-Disposition", `attachment; filename="${filename}"`);
-    res.send(xlsx);
+    res.send(csv);
   } catch (err) {
     next(err);
   }
