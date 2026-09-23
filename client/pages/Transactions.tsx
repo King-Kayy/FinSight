@@ -14,6 +14,7 @@ import { api } from "@/lib/api";
 import { IncomeForm } from "@/components/forms/IncomeForm";
 import { ExpenseForm } from "@/components/forms/ExpenseForm";
 import { RecurringExpenseForm } from "@/components/forms/RecurringExpenseForm";
+import { NaturalLanguageInput } from "@/components/forms/NaturalLanguageInput";
 import type { TransactionRecord, OCRResponse } from "../../shared/api";
 import { formatGHS } from "../../shared/formatCurrency";
 
@@ -101,6 +102,8 @@ export default function Transactions() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Transactions</h1>
+
+      <NaturalLanguageInput onSuccess={refresh} />
 
       <Tabs defaultValue="income">
         <TabsList className="mb-4">

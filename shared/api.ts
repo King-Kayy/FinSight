@@ -156,6 +156,25 @@ export interface OCRResponse {
 }
 
 // ---------------------------------------------------------------------------
+// Natural Language Transaction Parsing
+// ---------------------------------------------------------------------------
+
+export interface NLParseRequest {
+  text: string;
+}
+
+export interface ParsedTransaction {
+  type: "expense" | "income";
+  amount: number;
+  currency: string;
+  category: string;
+  description: string;
+  date: string; // ISO "YYYY-MM-DD"
+  confidence: "high" | "medium" | "low";
+  raw: string;
+}
+
+// ---------------------------------------------------------------------------
 // Errors
 // ---------------------------------------------------------------------------
 

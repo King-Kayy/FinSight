@@ -11,6 +11,7 @@ import savingsGoalsRouter from "./routes/savingsGoals";
 import recurringRouter from "./routes/recurringExpenses";
 import ocrRouter from "./routes/ocr";
 import exportRouter from "./routes/export";
+import nlpRouter from "./routes/nlp";
 import { initializeDb } from "./db/index";
 import { processScheduled } from "./services/recurringService";
 import {
@@ -70,6 +71,7 @@ export async function createServer() {
   app.use("/api", recurringRouter);
   app.use("/api", ocrRouter);
   app.use("/api", exportRouter);
+  app.use("/api", nlpRouter);
 
   // ---------------------------------------------------------------------------
   // Global error handler — must be registered AFTER all routes
