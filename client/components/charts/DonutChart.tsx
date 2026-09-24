@@ -27,6 +27,17 @@ export function DonutChart({ data, total }: DonutChartProps) {
       if (!chartArea) return;
       const cx = (chartArea.left + chartArea.right) / 2;
       const cy = (chartArea.top + chartArea.bottom) / 2;
+
+      // Fill center circle white
+      const innerRadius = chart.getDatasetMeta(0)?.data[0]?.innerRadius ?? 60;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.restore();
+
+      // Draw text on white background
       ctx.save();
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
