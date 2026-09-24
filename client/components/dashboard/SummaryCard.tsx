@@ -6,6 +6,8 @@ interface SummaryCardProps {
   variant?: "default" | "negative";
   icon?: React.ReactNode;
   description?: string;
+  trend?: { value: number; label: string }; // e.g. { value: 12, label: "from last month" }
+  accentColor?: "green" | "red" | "blue";
 }
 
 export function SummaryCard({
@@ -14,25 +16,43 @@ export function SummaryCard({
   variant = "default",
   icon,
   description,
+  trend,
+  accentColor = "green",
 }: SummaryCardProps) {
+  const borderColor = {
+    green: "border-l-emerald-500",
+    red: "border-l-red-500",
+    blue: "border-l-blue-500",
+  }[accentColor];
+
+  const trendColor = trend && trend.value >= 0 ? "text-emerald-600" : "text-red-500";
+  const trendSign = trend && trend.value >= 0 ? "+" : "";
+
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+    <div
+      className={`bg-white rounded-xl p-5 border border-gray-200 border-l-4 ${borderColor} shadow-sm hover:shadow-md transition-shadow`}
+    >
       <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-500">{label}</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</p>
           <p
-            className={`text-2xl font-bold mt-1 ${
+            className={`text-2xl font-bold mt-1 truncate ${
               variant === "negative" ? "text-red-600" : "text-gray-900"
             }`}
           >
             {value}
           </p>
-          {description && (
+          {trend && (
+            <p className={`text-xs font-medium mt-1 ${trendColor}`}>
+              {trendSign}{trend.value.toFixed(1)}% {trend.label}
+            </p>
+          )}
+          {!trend && description && (
             <p className="text-xs text-gray-400 mt-1">{description}</p>
           )}
         </div>
         {icon && (
-          <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center shrink-0 ml-3">
             {icon}
           </div>
         )}
