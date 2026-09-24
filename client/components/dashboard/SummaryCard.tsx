@@ -30,14 +30,15 @@ export function SummaryCard({
 
   return (
     <div
-      className={`bg-white rounded-xl p-5 border border-gray-200 border-l-4 ${borderColor} shadow-sm hover:shadow-md transition-shadow`}
+      className={`rounded-xl p-5 border border-white/10 border-l-4 ${borderColor} shadow-sm hover:shadow-md transition-shadow`}
+      style={{ backgroundColor: "#1a1a1a" }}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">{label}</p>
           <p
             className={`text-2xl font-bold mt-1 truncate ${
-              variant === "negative" ? "text-red-600" : "text-gray-900"
+              variant === "negative" ? "text-red-400" : "text-white"
             }`}
           >
             {value}
@@ -48,11 +49,11 @@ export function SummaryCard({
             </p>
           )}
           {!trend && description && (
-            <p className="text-xs text-gray-400 mt-1">{description}</p>
+            <p className="text-xs text-gray-500 mt-1">{description}</p>
           )}
         </div>
         {icon && (
-          <div className="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center shrink-0 ml-3">
+          <div className="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center shrink-0 ml-3">
             {icon}
           </div>
         )}

@@ -175,13 +175,13 @@ export default function Dashboard() {
 
       {/* ── Charts ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">Expense Breakdown</h2>
+        <div className="rounded-xl border border-white/10 p-5 shadow-sm" style={{ backgroundColor: "#1a1a1a" }}>
+          <h2 className="text-sm font-semibold text-gray-300 mb-4">Expense Breakdown</h2>
           <DonutChart data={currentMonthExpenses} total={totalExpenses} />
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">Monthly Comparison</h2>
+        <div className="rounded-xl border border-white/10 p-5 shadow-sm" style={{ backgroundColor: "#1a1a1a" }}>
+          <h2 className="text-sm font-semibold text-gray-300 mb-4">Monthly Comparison</h2>
           <BarChart data={report ? [report] : []} />
         </div>
       </div>
@@ -190,29 +190,24 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
         {/* Recent transactions */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">Recent Transactions</h2>
+        <div className="rounded-xl border border-white/10 p-5 shadow-sm" style={{ backgroundColor: "#1a1a1a" }}>
+          <h2 className="text-sm font-semibold text-gray-300 mb-4">Recent Transactions</h2>
           {recentTransactions.length === 0 ? (
-            <p className="text-gray-400 text-sm text-center py-6">No transactions yet.</p>
+            <p className="text-gray-500 text-sm text-center py-6">No transactions yet.</p>
           ) : (
             <ul className="space-y-3">
               {recentTransactions.map((tx) => (
                 <li key={`${tx.txType}-${tx.id}`} className="flex items-center gap-3">
-                  {/* Category avatar */}
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${categoryStyle(tx.category)}`}>
                     {categoryInitial(tx.category)}
                   </div>
-
-                  {/* Details */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800 truncate">
+                    <p className="text-sm font-medium text-gray-100 truncate">
                       {tx.description ?? tx.category}
                     </p>
-                    <p className="text-xs text-gray-400">{tx.date}</p>
+                    <p className="text-xs text-gray-500">{tx.date}</p>
                   </div>
-
-                  {/* Amount */}
-                  <div className={`flex items-center gap-0.5 text-sm font-semibold shrink-0 ${tx.txType === "income" ? "text-emerald-600" : "text-red-500"}`}>
+                  <div className={`flex items-center gap-0.5 text-sm font-semibold shrink-0 ${tx.txType === "income" ? "text-emerald-400" : "text-red-400"}`}>
                     {tx.txType === "income"
                       ? <ArrowUpRight className="w-3.5 h-3.5" />
                       : <ArrowDownRight className="w-3.5 h-3.5" />}
@@ -225,10 +220,10 @@ export default function Dashboard() {
         </div>
 
         {/* Savings goals */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">Savings Goals</h2>
+        <div className="rounded-xl border border-white/10 p-5 shadow-sm" style={{ backgroundColor: "#1a1a1a" }}>
+          <h2 className="text-sm font-semibold text-gray-300 mb-4">Savings Goals</h2>
           {savingsGoals.length === 0 ? (
-            <p className="text-gray-400 text-sm text-center py-6">No savings goals set.</p>
+            <p className="text-gray-500 text-sm text-center py-6">No savings goals set.</p>
           ) : (
             <ul className="space-y-4">
               {savingsGoals.slice(0, 4).map((goal) => {
@@ -237,15 +232,15 @@ export default function Dashboard() {
                 return (
                   <li key={goal.id}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700 truncate max-w-[60%]">
+                      <span className="text-sm font-medium text-gray-200 truncate max-w-[60%]">
                         {goal.name}
                       </span>
-                      <span className={`text-xs font-semibold ${isAchieved ? "text-emerald-600" : "text-gray-500"}`}>
+                      <span className={`text-xs font-semibold ${isAchieved ? "text-emerald-400" : "text-gray-400"}`}>
                         {isAchieved ? "Achieved" : `${progress.toFixed(0)}%`}
                       </span>
                     </div>
                     <Progress value={progress} className="h-2" />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1">
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
                       <span>{formatGHS(parseFloat(goal.current_savings))}</span>
                       <span>{formatGHS(parseFloat(goal.target_amount))}</span>
                     </div>

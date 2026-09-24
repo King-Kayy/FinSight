@@ -140,7 +140,7 @@ export function AppShell({ children }: AppShellProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto bg-gray-100">
           {children ?? <Outlet />}
         </main>
       </div>
