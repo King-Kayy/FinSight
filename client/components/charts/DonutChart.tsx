@@ -84,7 +84,7 @@ export function DonutChart({ data, total }: DonutChartProps) {
               />
               <span className="text-gray-600 truncate max-w-[120px]">{label as string}</span>
             </span>
-            <span className="text-gray-800 font-medium ml-2">
+            <span className="text-gray-600 font-medium ml-2">
               {formatGHS(chartData.datasets[0].data[i] as number)}
             </span>
           </li>
