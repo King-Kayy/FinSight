@@ -60,7 +60,7 @@ export function DonutChart({ data, total }: DonutChartProps) {
           options={{
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "65%",
+            cutout: "55%",
             plugins: {
               legend: { display: false },
               tooltip: {
