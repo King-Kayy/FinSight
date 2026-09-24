@@ -29,7 +29,7 @@ export function DonutChart({ data, total }: DonutChartProps) {
       const cy = (chartArea.top + chartArea.bottom) / 2;
 
       // Fill center circle white
-      const innerRadius = chart.getDatasetMeta(0)?.data[0]?.innerRadius ?? 50;
+      const innerRadius = chart.getDatasetMeta(0)?.data[0]?.innerRadius ?? 20;
       ctx.save();
       ctx.beginPath();
       ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2);
