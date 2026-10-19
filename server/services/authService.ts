@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { db } from '../db/index';
-import { ValidationError, AuthError, ConflictError } from '../middleware/errors';
+import { ValidationError, AuthError, ConflictError, NotFoundError } from '../middleware/errors';
 import type { UserProfile, AuthResponse } from '../../shared/api';
 
 const SALT_ROUNDS = 12;
@@ -77,7 +77,7 @@ export async function resetPassword(
     [email],
   );
   if (result.rows.length === 0) {
-    throw new AuthError('No account found with that email');
+    throw new NotFoundError('No account found with that email');
   }
 
   const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
