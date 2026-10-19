@@ -85,6 +85,19 @@ export async function createServer() {
     if (err instanceof ForbiddenError) return r.status(403).json({ error: err.message });
     if (err instanceof NotFoundError) return r.status(404).json({ error: err.message });
     if (err instanceof ConflictError) return r.status(409).json({ error: err.message });
+
+    // PostgreSQL foreign key violation (code 23503) on user_id means the JWT
+    // references a user that no longer exists (e.g. after a server restart wiped
+    // the in-memory DB). Treat it as an expired session so the client auto-logs out.
+    const pgCode = (err as any)?.code;
+    const msg = (err as any)?.message ?? "";
+    const isFkViolation =
+      pgCode === "23503" ||
+      (typeof msg === "string" && msg.includes("foreign key constraint") && msg.includes("user_id"));
+    if (isFkViolation) {
+      return r.status(401).json({ error: "Session expired. Please log in again." });
+    }
+
     console.error("[Server Error]", err);
     return r.status(500).json({ error: err.message ?? "Internal server error" });
   });
